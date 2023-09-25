@@ -1,0 +1,49 @@
+import kivy
+from kivy.app import App
+kivy.require('1.9.0')
+from kivy.uix.label import Label
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.textinput import TextInput
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.metrics import dp
+
+class AppEjemplo(App):
+    def build(self):
+        bl = BoxLayout(orientation='vertical')
+        ti = TextInput(font_size=35, height=100)
+        fl = FloatLayout()
+        l = Label(text='Hola...', font_size=35, size_hint=(None, None), size=(500, 200), text_size=(500, None))
+        fl.size_hint = (None, None)
+        fl.size = l.size
+        fl.pos_hint = {"center_x": 0.5, "center_y": 0.5 }
+        fl.add_widget(l)
+        button = Button(text='Aplicar Cambios', size_hint=(None, None), size=(200, 50), pos_hint={"center_x": 0.5})
+        l.bind(size=l.setter('text_size'))
+        fl.add_widget(button)
+        bl.add_widget(ti)
+        bl.add_widget(fl)
+        
+        def apply_changes(instance):
+            input_text = ti.text
+            lines = input_text.split('\n')
+            if len(lines) >= 6:
+                input_text = '\n'.join(lines[:6])
+            l.text = input_text
+            l.texture_update()
+            l.size = l.texture_size 
+            screen_width = self.root.width
+            screen_height = self.root.height
+            label_width = l.width
+            label_height = l.height
+            l.x = (screen_width - label_width) / 2
+            l.y = (screen_height - label_height) / 2
+            if len(input_text.split('\n')) > 1:
+                l.font_size = 20  
+        
+        button.bind(on_release=apply_changes)
+        return bl
+
+if __name__ == '__main__':
+    AppEjemplo().run()
+  
